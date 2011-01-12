@@ -43,14 +43,13 @@ void dis_px(fb_info *fb_inf, int x, int y, unsigned char *k)
 {
     int i;
     for (i = 0; i < 4; i++) 
-        fb_inf->fbmem[y * fb_inf->w * 4 + x * 4 + i] = k[y * fb_inf->w * 4 + x * 4 + i];
 }
 int main(int argc, const char *argv[])
 {
     int i, j;
     fb_info fb_inf;
     init_fb(&fb_inf);
-    for(i = 0;i < 1024;i++)
+    for(i = 0;i < 1366;i++)
         for(j = 0;j < 768; j++)
             dis_px(&fb_inf,i,j,kkkk);
     return 0;
