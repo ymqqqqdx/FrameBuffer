@@ -87,7 +87,7 @@ int mouse_test(fb_info fb)
             if(xx < 0)    xx = 0;
             if(yy > 721)  yy = 721;
             if(yy < 0)    yy = 0;
-            if(mevent.button == 1 && xx >= 420 && yy <= 710)
+            if(mevent.button == 1 && xx >= 420 && yy <= 710 && xx <= 1320)
             {
                 //print_board(fb,24,30,30,450,15,0x000000ff);
                 draw_piece(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,count ? 0x00000000 : 0xffffffff);

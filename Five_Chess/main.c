@@ -1,8 +1,6 @@
 #include "common.h"
 #include <math.h>
-extern unsigned char kkkk[3145736];
 extern unsigned char road[2359304];
-extern unsigned char cursor[4104];
 extern unsigned char cursor_16_25[1608];
 extern unsigned char gImage_chessboard[2831000];
 void create_fb(fb_info *fb_v)
@@ -185,6 +183,7 @@ int main(int argc, const char *argv[])
     mid.x = 512;
     mid.y = 275;
     create_fb(&fb_v);
+    system("clear");
     draw_pic(fb_v,400,0,gImage_chessboard);
     //fb_circle(fb_v,400,400,100,255);
     print_board(fb_v,23,30,30,420,15,0x00000000);
