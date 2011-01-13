@@ -1,7 +1,6 @@
 #include "common.h"
 extern unsigned char cursor_16_25[1608];
 unsigned char cursor_save[1608];
-u32_t cs[400];
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -11,7 +10,7 @@ int mouse_open(const char *mdev)
 
 int mouse_parse(int fd, mevent_t * mevent)
 {
-    s8_t buf[READ_MOUSE];
+    s8_t buf[READ_MOUSE] = {0};
     int n;
     if((n = read(fd, buf, READ_MOUSE)) > 0)
     {
@@ -28,15 +27,17 @@ void save_cursor(fb_info fb, int x, int y, char * cur)
 {
     int i, j, k;
     for(j = 0; j < 25; j++)
-    {
         for(i = 0; i < 16; i++)
-        {
             for(k = 0; k < 4; k++)
-            {
                 cur[16 * j * 4 + i * 4 + k] = fb.mem[((y + j) * 1408 + x + i ) * 4 + k];                
-            }
-        }
-    }
+}
+void restore_cursor(fb_info fb, int x, int y, char * cur)
+{
+    int i, j, k;
+    for(j = 0; j < 25; j++)
+        for(i = 0; i < 16; i++)
+            for(k = 0; k < 4; k++)
+                fb.mem[((y + j) * 1408 + x + i ) * 4 + k] = cur[16 * j * 4 + i * 4 + k];                
 }
 void draw_cursor(fb_info fb, int x, int y, char * cur)
 {
@@ -57,33 +58,10 @@ void draw_cursor(fb_info fb, int x, int y, char * cur)
         }
     }
 }
-void restore_cursor(fb_info fb, int x, int y, char * cur)
-{
-    int i, j, k;
-    u32_t temp;
-    for(j = 0; j < 25; j++)
-    {
-        for(i = 0; i < 16; i++)
-        {
-            temp = 0;
-            //for(k = 0;k < 4; k++)
-            //{
-                temp <<= 8;
-                temp |= cur[16 * j * 4 + i * 4 + 0];
-                temp <<= 8;
-                temp |= cur[16 * j * 4 + i * 4 + 1];
-                temp <<= 8;
-                temp |= cur[16 * j * 4 + i * 4 + 2];
-                temp <<= 8;
-                temp |= cur[16 * j * 4 + i * 4 + 3];
-                //}
-            draw_pix(fb,x + i,y + j,temp);
-        }
-    }
-}
 int mouse_test(fb_info fb)
 {
     int fd;
+    int count = 0;
     int xx = 123, yy = 234;
     if((fd = mouse_open("/dev/input/mice")) < 0)
     {
@@ -100,9 +78,8 @@ int mouse_test(fb_info fb)
     save_cursor(fb,xx,yy,cursor_save);
     while(1)
     {
-        if(mouse_parse(fd, &mevent) == 0)
+        if(mouse_parse(fd, &mevent) == 0 && (mevent.x || mevent.y || mevent.z || mevent.button))
         {
-//            printf("dx = %d\tdy = %d\tdz = %d\tbutton = %d\n",mevent.x,mevent.y,mevent.z,mevent.button);
             restore_cursor(fb,xx,yy,cursor_save);
             xx += mevent.x;
             yy += mevent.y;
@@ -110,6 +87,13 @@ int mouse_test(fb_info fb)
             if(xx < 0)    xx = 0;
             if(yy > 721)  yy = 721;
             if(yy < 0)    yy = 0;
+            if(mevent.button == 1 && xx >= 420 && yy <= 710)
+            {
+                //print_board(fb,24,30,30,450,15,0x000000ff);
+                draw_piece(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,count ? 0x00000000 : 0xffffffff);
+                //fb_circle(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,0x00000000);
+                count = (count + 1) % 2;
+            }
             save_cursor(fb,xx,yy,cursor_save);
             draw_cursor(fb,xx,yy,cursor_16_25);
         }
