@@ -1,2 +1,2 @@
 all:
-	gcc main.c kkkk.o road.o -lm
+	gcc mice.c main.c kkkk.o road.o cursor.o cursor_16_25.o  basic_shape.c  print-board.c common.h -lm

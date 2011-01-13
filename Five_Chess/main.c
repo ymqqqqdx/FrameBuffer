@@ -2,6 +2,8 @@
 #include <math.h>
 extern unsigned char kkkk[3145736];
 extern unsigned char road[2359304];
+extern unsigned char cursor[4104];
+extern unsigned char cursor_16_25[1608];
 void create_fb(fb_info *fb_v)
 {
     int fd;
@@ -31,12 +33,6 @@ void create_fb(fb_info *fb_v)
     close(fd);
 }
 
-void draw_pix(fb_info fb,int x,int y, u32_t color)
-{
-    u32_t *p;
-    p = (u32_t *)(fb.mem + 1408 * y * 4 + x * 4 );
-    *p = color;
-}
 void draw_pic(fb_info fb,int x,int y, u8_t *kk)
 {
     int i,j,k;
@@ -53,7 +49,7 @@ void draw_pic(fb_info fb,int x,int y, u8_t *kk)
             }
             draw_pix(fb,x + j,y + i,temp);
         }
-        usleep(4000);
+//        usleep(4000);
     }
 }
 void draw_pic_2(fb_info fb,int x,int y, u8_t *kk)
@@ -120,9 +116,9 @@ void circle2(fb_info fb,Dot mid,int radis,int r0,u8_t *kk)
 {
     int i,j,k;
     u32_t temp;
-    for(i = mid.x - radis;i < mid.x + radis;i++)
+    for(i = mid.x - radis;i < mid.x - r0;i++)
     {
-        for(j = mid.y - sqrt((radis * radis) - (i - mid.x) * (i - mid.x)); j < mid.y + sqrt((radis * radis) - (i - mid.x) * (i - mid.x)); j++)
+        for(j = mid.y - sqrt((radis * radis) - (i - mid.x) * (i - mid.x)) ; j < mid.y + sqrt((radis * radis) - (i - mid.x) * (i - mid.x)); j++)
         {
             temp = 0;
             for(k = 0;k < 4;k++)
@@ -132,69 +128,78 @@ void circle2(fb_info fb,Dot mid,int radis,int r0,u8_t *kk)
             }
             draw_pix(fb, i, j,temp);
         }
-        usleep(10);
+    }
+    for(i = mid.x + r0;i < mid.x + radis;i++)
+    {
+        for(j = mid.y - sqrt((radis * radis) - (i - mid.x) * (i - mid.x)) ; j < mid.y + sqrt((radis * radis) - (i - mid.x) * (i - mid.x)); j++)
+        {
+            temp = 0;
+            for(k = 0;k < 4;k++)
+            {
+                temp <<= 8;
+                temp |= kk[1024 * j * 4 + i * 4 + k];
+            }
+            draw_pix(fb, i, j,temp);
+        }
+    }
+    for(i = mid.x - r0; i < mid.x + r0; i++)
+    {
+        for(j = mid.y - sqrt((radis * radis) - (i - mid.x) * (i - mid.x)); j <= mid.y - sqrt((r0 * r0) - (i - mid.x) * (i - mid.x)); j++) 
+        {
+            temp = 0;
+            for(k = 0;k < 4;k++)
+            {
+                temp <<= 8;
+                temp |= kk[1024 * j * 4 + i * 4 + k];
+            }
+            draw_pix(fb, i, j,temp);
+        }
+        for(j = mid.y + sqrt((radis * radis) - (i - mid.x) * (i - mid.x)); j >= mid.y + sqrt((r0 * r0) - (i - mid.x) * (i - mid.x)); j--) 
+        {
+            temp = 0;
+            for(k = 0;k < 4;k++)
+            {
+                temp <<= 8;
+                temp |= kk[1024 * j * 4 + i * 4 + k];
+            }
+            draw_pix(fb, i, j,temp);
+        }
     }
 }
-void drawretangle(fb_info fb,Dot start,Dot end,u32_t color)
+void draw_piece(fb_info fb,int x,int y,int r,u32_t color)
 {
     int i,j;
-    for(i = start.x; i < end.x; i++)
+    for(i = x - r; i < x + r; i++)
     {
-        for(j = start.y; j < end.y; j++)
-        {
-            draw_pix(fb,i,j,color);
-        }
-    }
-}
-void drawline(fb_info fb,Dot start,Dot end,u32_t color)
-{
-    int i,j;
-    if((end.x - start.x) > (end.y - start.y))
-        for(i = start.x; i <= end.x; i++)
-        {
-            j = start.y + (end.y - start.y) * i / (end.x - start.x);
-                draw_pix(fb,i,j,color);
-        }
-    else
-        for(i = start.y; i <= end.y; i++)
-        {
-            j = start.x + (end.x - start.x) * i / (end.y - start.y);
-                draw_pix(fb,j,i,color);
-        }
-}
-int fb_line(fb_info fb,int x1,int y1,int x2,int y2, u32_t color)
-{
-    int dx = x2 - x1;
-    int dy = y2 - y1;
-    int inc = (dx * dy > 0) ? 1 : -1;
-    int p = 2 * dy - dx;
-    dy = abs(dy);
-    while(x1 <= x2)
-    {
-        draw_pix(fb,x1,y1,color);
-        x1++;
-        if(p < 0)
-            p += 2 * dy;
-        else
-        {
-            p += 2 * (dy - dx);
-            y1 += inc;
-        }
+        for(j = y - sqrt(r * r - (i - x) * (i - x)); j < y + sqrt(r * r - (i - x) * (i - x)); j++)
+            draw_pix(fb, i, j, color);
     }
 }
 int main(int argc, const char *argv[])
 {
     fb_info fb_v;
     int i,j;
+    int xx,yy;
     Dot mid;
     mid.x = 512;
     mid.y = 275;
     create_fb(&fb_v);
-    fb_line(fb_v,0,0,800,0,255);
-    fb_line(fb_v,0,600,800,600,255);
-    fb_line(fb_v,0,0,800,600,255);
-    fb_line(fb_v,0,600,800,0,255);
-    //circle(fb_v,mid,i,road);
+    draw_pic(fb_v,0,0,road);
+    fb_circle(fb_v,400,400,100,255);
+    printf("Enter x y:");
+    scanf("%d %d",&xx,&yy);
+    xx = (xx + 15)/30 * 30;
+    yy = (yy + 15)/30 * 30;
+    print_board(fb_v,24,30,30,450,15,0x000000ff);
+    draw_piece(fb_v,xx + 450,yy + 15,13,0x0000ff00);
+    mouse_test(fb_v);
+    //draw_cursor(fb_v,300,300,cursor_16_25);
+    //goto st;
+    //for(i = 1;i < 275;i++)
+    //{
+        //circle2(fb_v,mid,i+1,i,road);
+        //usleep(100000);
+    //}
     //system("clear");
     //draw_pic(fb_v,0,0,road);
     //system("clear");
