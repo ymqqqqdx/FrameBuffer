@@ -1,6 +1,8 @@
 #include "common.h"
 extern unsigned char cursor_16_25[1608];
 unsigned char cursor_save[1608];
+char board[23 * 30] = {0};
+char who = 1;
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -58,10 +60,57 @@ void draw_cursor(fb_info fb, int x, int y, char * cur)
         }
     }
 }
+int chess_count(int xx, int yy)
+{
+    int i = (xx + 15 - 420) / 30;
+    int j = yy / 30;
+    board[i + j * 23] = who;
+}
+int check(int xx, int yy)
+{
+    int i = (xx + 15 - 420) / 30;
+    int j = yy / 30;
+    return board[i + j * 23];
+}
+int check_five(int x, int y)
+{
+    int i = 0;
+    char counter = 0;
+    char storage = 0;
+    storage = board[x + y * 23];
+    if(storage == 0)
+        return 0;
+    counter = 1;
+    for(i = 1; i < 5; i++)
+    {
+        if(board[x + i + (y + i) * 23] == storage)
+            counter++;
+        else
+            break;
+    }
+    if(counter == 5)
+        return storage;
+    return 0;
+}
+int check_all(void)
+{
+    int i = 0;
+    int j = 0;
+
+    for(i = 0; i < 30; i++)
+        for(j = 0; j < 23; j++)
+        {
+            if(check_five(i,j))
+            {
+                printf("%d won\n",who);
+                return 1;
+            }
+        }
+    return 0;
+}
 int mouse_test(fb_info fb)
 {
     int fd;
-    int count = 0;
     int xx = 123, yy = 234;
     if((fd = mouse_open("/dev/input/mice")) < 0)
     {
@@ -89,10 +138,15 @@ int mouse_test(fb_info fb)
             if(yy < 0)    yy = 0;
             if(mevent.button == 1 && xx >= 420 && yy <= 710 && xx <= 1320)
             {
-                //print_board(fb,24,30,30,450,15,0x000000ff);
-                draw_piece(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,count ? 0x00000000 : 0xffffffff);
-                //fb_circle(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,0x00000000);
-                count = (count + 1) % 2;
+                if(! check(xx,yy))
+                {
+                    draw_piece(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
+                    chess_count(xx, yy);
+                    if(check_all())
+                        exit(0);
+                    printf("%d %d\n",(xx + 15 - 420) / 30, (yy) / 30);
+                    who = (who - 1) ? 1 : 2;
+                }
             }
             save_cursor(fb,xx,yy,cursor_save);
             draw_cursor(fb,xx,yy,cursor_16_25);

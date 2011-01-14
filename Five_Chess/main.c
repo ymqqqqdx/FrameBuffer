@@ -48,7 +48,7 @@ void draw_pic(fb_info fb,int x,int y, u8_t *kk)
             }
             draw_pix(fb,x + j,y + i,temp);
         }
-        usleep(4000);
+        //usleep(4000);
     }
 }
 void draw_pic_2(fb_info fb,int x,int y, u8_t *kk)
