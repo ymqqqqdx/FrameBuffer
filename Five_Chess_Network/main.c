@@ -174,10 +174,11 @@ void draw_piece(fb_info fb,int x,int y,int r,u32_t color)
             draw_pix(fb, i, j, color);
     }
 }
-extern void mouse_test(fb_info);
+extern void mouse_test(fb_info *);
 int main(int argc, const char *argv[])
 {
     fb_info fb_v;
+    fb_info * temp;
 	pthread_t id;
     int i,j;
     int fd;
@@ -193,14 +194,15 @@ int main(int argc, const char *argv[])
     draw_piece(fb_v,350,250,40,0x00000000);
     draw_piece(fb_v,350,550,40,0xffffffff);
     print_board(fb_v,23,30,30,420,15,0x00000000);
-    mouse_test(fb_v);
-    if(ret = pthread_create(&id, NULL, (void *) mouse_test,&fb_v))
+    //mouse_test(fb_v);
+    temp = &fb_v;
+    if(ret = pthread_create(&id, NULL, (void *) mouse_test,(void *)temp))
     {
         printf("Create pthread error!\n");
         exit(1);
     }
     udp_server(fb_v);
-
+    //while(1);
     //for(i = 1;i < 275;i++)
     //{
         //circle2(fb_v,mid,i+1,i,road);

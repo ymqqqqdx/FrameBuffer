@@ -3,8 +3,10 @@ extern unsigned char cursor_16_25[1608];
 unsigned char cursor_save[1608];
 char board[23 * 30] = {0};
 int who = 1;
-int xx = 123, yy = 234;
+//int xx = 123, yy = 234;
 mevent_t mevent;
+int ready = 0;
+extern char buffer[256];
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -74,6 +76,13 @@ int check(int xx, int yy)
     int j = yy / 30;
     return board[i + j * 23];
 }
+int send_to_client(int xx, int yy)
+{
+    int i = (xx + 15 - 420) / 30;
+    int j = yy / 30;
+    sprintf(buffer, "%d %d %d", who, i, j);
+    ready = 1;
+}
 int check_five(fb_info fb,int x, int y)
 {
     int i = 0, j = 0;
@@ -122,9 +131,10 @@ int check_all(fb_info fb)
         }
     return 0;
 }
-void mouse_test(fb_info fb)
+void mouse_test(fb_info *fb)
 {
     int fd;
+    int xx = 110, yy = 220;
     if((fd = mouse_open("/dev/input/mice")) < 0)
     {
         perror("mouse_open");
@@ -136,18 +146,19 @@ void mouse_test(fb_info fb)
         perror("mouse_write");
         fprintf(stderr, "Error write to mice device\n");
     }
-    save_cursor(fb,xx,yy,cursor_save);
+    save_cursor(*fb,xx,yy,cursor_save);
     while(1)
     {
         if(mouse_parse(fd, &mevent) == 0 && (mevent.x || mevent.y || mevent.z || mevent.button))
         {
-            restore_cursor(fb,xx,yy,cursor_save);
+            restore_cursor(*fb,xx,yy,cursor_save);
             xx += mevent.x;
             yy += mevent.y;
             if(xx > 1366) xx = 1366;
             if(xx < 0)    xx = 0;
             if(yy > 721)  yy = 721;
             if(yy < 0)    yy = 0;
+            //printf("xx = %d yy = %d\n",xx,yy);
             if(mevent.button == 1 && xx < 420)
             {
                 if(xx >= 300 && yy >=210 && yy <= 290)
@@ -159,16 +170,17 @@ void mouse_test(fb_info fb)
             {
                 if(! check(xx,yy))
                 {
-                    draw_piece(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
+                    draw_piece(*fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
                     chess_count(xx, yy);
-                    if(check_all(fb))
+                    send_to_client(xx, yy);
+                    if(check_all(*fb))
                         exit(0);
                     printf("%d %d\n",(xx + 15 - 420) / 30, (yy) / 30);
                     who = (who - 1) ? 1 : 2;
                 }
             }
-            save_cursor(fb,xx,yy,cursor_save);
-            draw_cursor(fb,xx,yy,cursor_16_25);
+            save_cursor(*fb,xx,yy,cursor_save);
+            draw_cursor(*fb,xx,yy,cursor_16_25);
         }
         usleep(1000);
     }
