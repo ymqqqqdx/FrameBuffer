@@ -2,7 +2,9 @@
 extern unsigned char cursor_16_25[1608];
 unsigned char cursor_save[1608];
 char board[23 * 30] = {0};
-char who = 1;
+int who = 1;
+int xx = 123, yy = 234;
+mevent_t mevent;
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -10,7 +12,7 @@ int mouse_open(const char *mdev)
     return (open(mdev,O_RDWR | O_NONBLOCK));
 }
 
-int mouse_parse(int fd, mevent_t * mevent)
+int mouse_parse(int fd,mevent_t * mevent)
 {
     s8_t buf[READ_MOUSE] = {0};
     int n;
@@ -120,16 +122,14 @@ int check_all(fb_info fb)
         }
     return 0;
 }
-int mouse_test(fb_info fb)
+void mouse_test(fb_info fb)
 {
     int fd;
-    int xx = 123, yy = 234;
     if((fd = mouse_open("/dev/input/mice")) < 0)
     {
         perror("mouse_open");
         exit(1);
     }
-    mevent_t mevent;
     u8_t buf[] = {0xf3,0xc8,0xf3,0x64,0xf3,0x50};
     if(write(fd, buf, sizeof(buf)) < sizeof(buf))
     {
@@ -170,6 +170,6 @@ int mouse_test(fb_info fb)
             save_cursor(fb,xx,yy,cursor_save);
             draw_cursor(fb,xx,yy,cursor_16_25);
         }
-        usleep(100);
+        usleep(1000);
     }
 }
