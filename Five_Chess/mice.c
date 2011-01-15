@@ -72,27 +72,39 @@ int check(int xx, int yy)
     int j = yy / 30;
     return board[i + j * 23];
 }
-int check_five(int x, int y)
+int check_five(fb_info fb,int x, int y)
 {
-    int i = 0;
+    int i = 0, j = 0;
     char counter = 0;
     char storage = 0;
+    char n_x[4] = {0, 1, 1, 1};
+    char n_y[4] = {1, 0, 1, -1};
+    char nx = x, ny = y;
     storage = board[x + y * 23];
     if(storage == 0)
         return 0;
-    counter = 1;
-    for(i = 1; i < 5; i++)
+    for(j = 0; j < 4; j++)
     {
-        if(board[x + i + (y + i) * 23] == storage)
-            counter++;
-        else
-            break;
+        counter = 1;
+        nx = x; ny = y;
+        for(i = 1; i < 5; i++)
+        {
+            nx += n_x[j];
+            ny += n_y[j];
+            if(board[nx + ny * 23] == storage)
+                counter++;
+            else
+                break;
+        }
+        if(counter == 5)
+        {
+            //draw_piece(fb,nx * 30 + 420,ny * 30 + 15, 13, 0x00ff0000);
+            return storage;
+        }
     }
-    if(counter == 5)
-        return storage;
     return 0;
 }
-int check_all(void)
+int check_all(fb_info fb)
 {
     int i = 0;
     int j = 0;
@@ -100,7 +112,7 @@ int check_all(void)
     for(i = 0; i < 30; i++)
         for(j = 0; j < 23; j++)
         {
-            if(check_five(i,j))
+            if(check_five(fb,i,j))
             {
                 printf("%d won\n",who);
                 return 1;
@@ -136,13 +148,20 @@ int mouse_test(fb_info fb)
             if(xx < 0)    xx = 0;
             if(yy > 721)  yy = 721;
             if(yy < 0)    yy = 0;
+            if(mevent.button == 1 && xx < 420)
+            {
+                if(xx >= 300 && yy >=210 && yy <= 290)
+                    who = 2;
+                else if(xx >= 300 && yy >= 510 && yy <= 590)
+                    who = 1;
+            }
             if(mevent.button == 1 && xx >= 420 && yy <= 710 && xx <= 1320)
             {
                 if(! check(xx,yy))
                 {
                     draw_piece(fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
                     chess_count(xx, yy);
-                    if(check_all())
+                    if(check_all(fb))
                         exit(0);
                     printf("%d %d\n",(xx + 15 - 420) / 30, (yy) / 30);
                     who = (who - 1) ? 1 : 2;

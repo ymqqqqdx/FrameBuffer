@@ -1,0 +1,45 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Dot	common.h	/^}Dot;$/;"	t	typeref:struct:__anon2
+READ_MOUSE	common.h	13;"	d
+_BASIC_SHAPE_	basic_shape.c	2;"	d	file:
+__COMMON_H__	common.h	2;"	d
+bpp	common.h	/^    int bpp;$/;"	m	struct:__anon1
+button	common.h	/^    int button;$/;"	m	struct:__anon3
+circle	main.c	/^void circle(fb_info fb,Dot mid,int radis,u8_t *kk)$/;"	f
+circle2	main.c	/^void circle2(fb_info fb,Dot mid,int radis,int r0,u8_t *kk)$/;"	f
+create_fb	main.c	/^void create_fb(fb_info *fb_v)$/;"	f
+cursor	cursor.c	/^const unsigned char cursor[4104] = { $/;"	v
+draw_cursor	mice.c	/^void draw_cursor(fb_info fb, int x, int y,char * cur)$/;"	f
+draw_pic	main.c	/^void draw_pic(fb_info fb,int x,int y, u8_t *kk)$/;"	f
+draw_pic_2	main.c	/^void draw_pic_2(fb_info fb,int x,int y, u8_t *kk)$/;"	f
+draw_pic_3	main.c	/^void draw_pic_3(fb_info fb,int x,int y, u8_t *kk)$/;"	f
+draw_piece	main.c	/^void draw_piece(fb_info fb,int x,int y,int r,u32_t color)$/;"	f
+draw_pix	basic_shape.c	/^void draw_pix(fb_info fb,int x,int y, u32_t color)$/;"	f
+drawretangle	basic_shape.c	/^void drawretangle(fb_info fb,Dot start,Dot end,u32_t color)$/;"	f
+fb_info	common.h	/^}fb_info;$/;"	t	typeref:struct:__anon1
+fb_line	basic_shape.c	/^int fb_line(fb_info fb,int x1,int y1,int x2,int y2,u32_t color)$/;"	f
+h	common.h	/^    int h;$/;"	m	struct:__anon1
+kkkk	kkkk.c	/^const unsigned char kkkk[3145736] = { 0X00,0X20,0X00,0X04,0X00,0X03,0X00,0XE4,$/;"	v
+main	main.c	/^int main(int argc, const char *argv[])$/;"	f
+mem	common.h	/^    u8_t *mem;$/;"	m	struct:__anon1
+mevent_t	common.h	/^}mevent_t;$/;"	t	typeref:struct:__anon3
+mouse_open	mice.c	/^int mouse_open(const char *mdev)$/;"	f
+mouse_parse	mice.c	/^int mouse_parse(int fd, mevent_t * mevent)$/;"	f
+mouse_test	mice.c	/^int mouse_test(fb_info fb)$/;"	f
+print_board	print-board.c	/^void print_board(fb_info fb,int horizen,int vertical,int blank,int offset,int offset_y,u32_t color)$/;"	f
+road	road.c	/^const unsigned char road[2359304] = { 0X00,0X20,0X00,0X04,0X40,0X02,0X00,0X1B,$/;"	v
+s8_t	common.h	/^typedef char s8_t;$/;"	t
+swap	basic_shape.c	/^void swap(int *a,int *b)$/;"	f
+u32_t	common.h	/^typedef unsigned int u32_t;$/;"	t
+u8_t	common.h	/^typedef unsigned char u8_t;$/;"	t
+w	common.h	/^    int w;$/;"	m	struct:__anon1
+x	common.h	/^    int x;$/;"	m	struct:__anon2
+x	common.h	/^    int x;$/;"	m	struct:__anon3
+y	common.h	/^    int y;$/;"	m	struct:__anon2
+y	common.h	/^    int y;$/;"	m	struct:__anon3
+z	common.h	/^    int z;$/;"	m	struct:__anon3

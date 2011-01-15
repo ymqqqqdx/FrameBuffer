@@ -32,13 +32,13 @@ void create_fb(fb_info *fb_v)
     close(fd);
 }
 
-void draw_pic(fb_info fb,int x,int y, u8_t *kk)
+void draw_pic(fb_info fb,int x,int y, int sizex, int sizey, u8_t *kk)
 {
     int i,j,k;
     u32_t temp;
-    for(i = 0;i < 720;i++)
+    for(i = 0;i < sizey;i++)
     {
-        for(j = 0; j < 940;j++)
+        for(j = 0; j < sizex;j++)
         {
             temp = 0;
             for(k = 0;k < 4;k++)
@@ -184,7 +184,11 @@ int main(int argc, const char *argv[])
     mid.y = 275;
     create_fb(&fb_v);
     system("clear");
-    draw_pic(fb_v,400,0,gImage_chessboard);
+    draw_pic(fb_v,400,0,940,720,gImage_chessboard);
+    draw_pic(fb_v,300,200,100,100,gImage_chessboard);
+    draw_pic(fb_v,300,500,100,100,gImage_chessboard);
+    draw_piece(fb_v,350,250,40,0x00000000);
+    draw_piece(fb_v,350,550,40,0xffffffff);
     //fb_circle(fb_v,400,400,100,255);
     print_board(fb_v,23,30,30,420,15,0x00000000);
     //draw_piece(fb_v,xx + 450,yy + 15,13,0x0000ff00);
