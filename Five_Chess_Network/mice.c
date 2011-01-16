@@ -7,6 +7,8 @@ mevent_t mevent;
 int ready = 0;
 extern char buffer[256];
 int turn = 0;
+extern void draw_pix(fb_info fb,int x,int y, u32_t color);
+extern void draw_piece(fb_info fb,int x,int y,int r,u32_t color);
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -29,7 +31,7 @@ int mouse_parse(int fd,mevent_t * mevent)
         return -1;
     return 0;
 }
-void save_cursor(fb_info fb, int x, int y, char * cur)
+void save_cursor(fb_info fb, int x, int y, unsigned char * cur)
 {
     int i, j, k;
     for(j = 0; j < 25; j++)
@@ -37,7 +39,7 @@ void save_cursor(fb_info fb, int x, int y, char * cur)
             for(k = 0; k < 4; k++)
                 cur[16 * j * 4 + i * 4 + k] = fb.mem[((y + j) * 1408 + x + i ) * 4 + k];                
 }
-void restore_cursor(fb_info fb, int x, int y, char * cur)
+void restore_cursor(fb_info fb, int x, int y, unsigned char * cur)
 {
     int i, j, k;
     for(j = 0; j < 25; j++)
@@ -45,7 +47,7 @@ void restore_cursor(fb_info fb, int x, int y, char * cur)
             for(k = 0; k < 4; k++)
                 fb.mem[((y + j) * 1408 + x + i ) * 4 + k] = cur[16 * j * 4 + i * 4 + k];                
 }
-void draw_cursor(fb_info fb, int x, int y, char * cur)
+void draw_cursor(fb_info fb, int x, int y, unsigned char * cur)
 {
     int i,j,k;
     u32_t temp;
@@ -59,12 +61,12 @@ void draw_cursor(fb_info fb, int x, int y, char * cur)
                 temp <<= 8;
                 temp |= cur[16 * i * 4 + j * 4 + k];
             }
-            if(temp != 0xffffff80)
+            if(temp != 0x00008080)
                 draw_pix(fb,x + j,y + i,temp);
         }
     }
 }
-int chess_count(int whom, int xx, int yy)
+void chess_count(int whom, int xx, int yy)
 {
     int i = (xx + 15 - 420) / 30;
     int j = yy / 30;
@@ -76,7 +78,7 @@ int check(int xx, int yy)
     int j = yy / 30;
     return board[i + j * 23];
 }
-int send_to_client(int xx, int yy)
+void send_to_client(int xx, int yy)
 {
     int i = (xx + 15 - 420) / 30;
     int j = yy / 30;
@@ -124,7 +126,7 @@ int check_all(fb_info fb)
     for(i = 0; i < 30; i++)
         for(j = 0; j < 23; j++)
         {
-            if(winner = check_five(fb,i,j))
+            if((winner = check_five(fb,i,j)) != 0)
             {
                 printf("%d won\n",winner);
                 return 1;

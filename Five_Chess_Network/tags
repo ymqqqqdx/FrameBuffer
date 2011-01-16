@@ -4,40 +4,61 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+BUFFER_SIZE	client.c	31;"	d	file:
+BUFFER_SIZE	server.c	15;"	d	file:
 Dot	common.h	/^}Dot;$/;"	t	typeref:struct:__anon2
-READ_MOUSE	common.h	13;"	d
-_BASIC_SHAPE_	basic_shape.c	2;"	d	file:
+READ_MOUSE	common.h	14;"	d
+SERVER_PORT	client.c	30;"	d	file:
+SERVER_PORT	server.c	14;"	d	file:
 __COMMON_H__	common.h	2;"	d
+board	mice.c	/^char board[23 * 30] = {0};$/;"	v
 bpp	common.h	/^    int bpp;$/;"	m	struct:__anon1
+buffer	client.c	/^char buffer[BUFFER_SIZE];$/;"	v
+buffer	server.c	/^char buffer[BUFFER_SIZE];$/;"	v
 button	common.h	/^    int button;$/;"	m	struct:__anon3
+check	mice.c	/^int check(int xx, int yy)$/;"	f
+check_all	mice.c	/^int check_all(fb_info fb)$/;"	f
+check_five	mice.c	/^int check_five(fb_info fb,int x, int y)$/;"	f
+chess_count	mice.c	/^void chess_count(int whom, int xx, int yy)$/;"	f
 circle	main.c	/^void circle(fb_info fb,Dot mid,int radis,u8_t *kk)$/;"	f
 circle2	main.c	/^void circle2(fb_info fb,Dot mid,int radis,int r0,u8_t *kk)$/;"	f
 create_fb	main.c	/^void create_fb(fb_info *fb_v)$/;"	f
-cursor	cursor.c	/^const unsigned char cursor[4104] = { $/;"	v
-draw_cursor	mice.c	/^void draw_cursor(fb_info fb, int x, int y,char * cur)$/;"	f
-draw_pic	main.c	/^void draw_pic(fb_info fb,int x,int y, u8_t *kk)$/;"	f
+cursor_16_25	cursor_16_25.c	/^const unsigned char cursor_16_25[1608] = { \/\/0X10,0X20,0X00,0X10,0X00,0X19,0X00,0X1B,$/;"	v
+cursor_save	mice.c	/^unsigned char cursor_save[1608];$/;"	v
+draw_cursor	mice.c	/^void draw_cursor(fb_info fb, int x, int y, unsigned char * cur)$/;"	f
+draw_pic	main.c	/^void draw_pic(fb_info fb,int x,int y, int sizex, int sizey, u8_t *kk)$/;"	f
 draw_pic_2	main.c	/^void draw_pic_2(fb_info fb,int x,int y, u8_t *kk)$/;"	f
 draw_pic_3	main.c	/^void draw_pic_3(fb_info fb,int x,int y, u8_t *kk)$/;"	f
 draw_piece	main.c	/^void draw_piece(fb_info fb,int x,int y,int r,u32_t color)$/;"	f
 draw_pix	basic_shape.c	/^void draw_pix(fb_info fb,int x,int y, u32_t color)$/;"	f
 drawretangle	basic_shape.c	/^void drawretangle(fb_info fb,Dot start,Dot end,u32_t color)$/;"	f
+fb_circle	basic_shape.c	/^void fb_circle(fb_info fb,int x0, int y0, int r, u32_t color)$/;"	f
 fb_info	common.h	/^}fb_info;$/;"	t	typeref:struct:__anon1
 fb_line	basic_shape.c	/^int fb_line(fb_info fb,int x1,int y1,int x2,int y2,u32_t color)$/;"	f
+gImage_chessboard	chessboard.c	/^const unsigned char gImage_chessboard[2831000] = { \/* 0X00,0X20,0XB6,0X03,0XE9,0X02,0X00,0X1B, *\/$/;"	v
 h	common.h	/^    int h;$/;"	m	struct:__anon1
-kkkk	kkkk.c	/^const unsigned char kkkk[3145736] = { 0X00,0X20,0X00,0X04,0X00,0X03,0X00,0XE4,$/;"	v
+main	client.c	/^int main(int argc, char *argv[])$/;"	f
 main	main.c	/^int main(int argc, const char *argv[])$/;"	f
 mem	common.h	/^    u8_t *mem;$/;"	m	struct:__anon1
+mevent	mice.c	/^mevent_t mevent;$/;"	v
 mevent_t	common.h	/^}mevent_t;$/;"	t	typeref:struct:__anon3
 mouse_open	mice.c	/^int mouse_open(const char *mdev)$/;"	f
-mouse_parse	mice.c	/^int mouse_parse(int fd, mevent_t * mevent)$/;"	f
-mouse_test	mice.c	/^int mouse_test(fb_info fb)$/;"	f
+mouse_parse	mice.c	/^int mouse_parse(int fd,mevent_t * mevent)$/;"	f
+mouse_test	mice.c	/^void mouse_test(fb_info *fb)$/;"	f
 print_board	print-board.c	/^void print_board(fb_info fb,int horizen,int vertical,int blank,int offset,int offset_y,u32_t color)$/;"	f
-road	road.c	/^const unsigned char road[2359304] = { 0X00,0X20,0X00,0X04,0X40,0X02,0X00,0X1B,$/;"	v
+ready	mice.c	/^int ready = 0;$/;"	v
+restore_cursor	mice.c	/^void restore_cursor(fb_info fb, int x, int y, unsigned char * cur)$/;"	f
+road	road.c	/^const unsigned char road[2359304] = { \/\/0X00,0X20,0X00,0X04,0X40,0X02,0X00,0X1B,$/;"	v
 s8_t	common.h	/^typedef char s8_t;$/;"	t
+save_cursor	mice.c	/^void save_cursor(fb_info fb, int x, int y, unsigned char * cur)$/;"	f
+send_to_client	mice.c	/^void send_to_client(int xx, int yy)$/;"	f
 swap	basic_shape.c	/^void swap(int *a,int *b)$/;"	f
+turn	mice.c	/^int turn = 0;$/;"	v
 u32_t	common.h	/^typedef unsigned int u32_t;$/;"	t
 u8_t	common.h	/^typedef unsigned char u8_t;$/;"	t
+udp_server	server.c	/^int udp_server(fb_info fb)$/;"	f
 w	common.h	/^    int w;$/;"	m	struct:__anon1
+who	mice.c	/^int who = 2;$/;"	v
 x	common.h	/^    int x;$/;"	m	struct:__anon2
 x	common.h	/^    int x;$/;"	m	struct:__anon3
 y	common.h	/^    int y;$/;"	m	struct:__anon2

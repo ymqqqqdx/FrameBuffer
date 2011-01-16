@@ -69,7 +69,7 @@ int fb_line(fb_info fb,int x1,int y1,int x2,int y2,u32_t color)
     }
     return 0;
 }
-int fb_circle(fb_info fb,int x0, int y0, int r, u32_t color)
+void fb_circle(fb_info fb,int x0, int y0, int r, u32_t color)
 {
     int x = 0;
     int y = r;

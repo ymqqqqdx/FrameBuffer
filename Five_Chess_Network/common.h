@@ -10,6 +10,7 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <pthread.h>
 #define READ_MOUSE 8
 typedef unsigned int u32_t;
 typedef unsigned char u8_t;

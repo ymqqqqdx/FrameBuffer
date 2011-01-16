@@ -19,14 +19,15 @@ extern int who;
 extern int ready;
 extern char board[23 * 30];
 extern int turn;
+extern void draw_piece(fb_info fb,int x,int y,int r,u32_t color);
+extern int check_all(fb_info fb);
 int udp_server(fb_info fb)
 {
-	char c;
-	int i, len;
+	int len;
 	int server_sock;
 	socklen_t client_len;
 	struct sockaddr_in server,client;
-	struct in_addr in;
+    //struct in_addr in;
     int x, y;
     int whom;
 
@@ -78,7 +79,7 @@ int udp_server(fb_info fb)
         printf("receive:%s\n",buffer);
         sscanf(buffer, "%1d %2d %2d", &whom, &x, &y);
         draw_piece(fb, x * 30 + 420, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
-        board[x, y] = whom;
+        board[x + y * 23] = whom;
         turn = 1;
         if(check_all(fb))
             exit(0);
