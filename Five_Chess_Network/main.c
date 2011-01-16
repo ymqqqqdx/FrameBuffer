@@ -10,7 +10,7 @@ void create_fb(fb_info *fb_v)
     fd = open("/dev/fb0",O_RDWR);
     if(fd < 0)
     {
-        perror("Open Error.");
+        perror("Open");
         exit(1);
     }
     struct fb_var_screeninfo fb_var;

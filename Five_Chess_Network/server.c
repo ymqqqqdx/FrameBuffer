@@ -17,6 +17,8 @@
 char buffer[BUFFER_SIZE];
 extern int who;
 extern int ready;
+extern char board[23 * 30];
+extern int turn;
 int udp_server(fb_info fb)
 {
 	char c;
@@ -26,6 +28,7 @@ int udp_server(fb_info fb)
 	struct sockaddr_in server,client;
 	struct in_addr in;
     int x, y;
+    int whom;
 
 	if ((server_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 	{
@@ -57,26 +60,31 @@ int udp_server(fb_info fb)
 	{
 		client_len = sizeof(client);
 		len = recvfrom(server_sock, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&client, &client_len);
-		if (len < 0)
-		{
-			close(server_sock);
-			fprintf(stderr, "%s\n", strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			printf("recvfrom client ok!\n");
-			in.s_addr = client.sin_addr.s_addr;
-			printf("client ip  : %s\n", inet_ntoa(in));
-			printf("client port: %d\n", ntohs(client.sin_port));
-			printf("\n");
-		}
-
-		if(buffer[0] == '.') break;
-        sscanf(buffer, "%d %d %d", &who, &x, &y);
-        draw_piece(fb, x * 30 + 420, y * 30 + 15, 13,(who - 1) ? 0x00000000 : 0xffffffff);
+		//if (len < 0)
+		//{
+			//close(server_sock);
+			//fprintf(stderr, "%s\n", strerror(errno));
+			//exit(EXIT_FAILURE);
+		//}
+		//else
+		//{
+			//printf("recvfrom client ok!\n");
+			//in.s_addr = client.sin_addr.s_addr;
+			//printf("client ip  : %s\n", inet_ntoa(in));
+			//printf("client port: %d\n", ntohs(client.sin_port));
+			//printf("\n");
+		//}
+		//if(buffer[0] == '.') break;
+        printf("receive:%s\n",buffer);
+        sscanf(buffer, "%1d %2d %2d", &whom, &x, &y);
+        draw_piece(fb, x * 30 + 420, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
+        board[x, y] = whom;
+        turn = 1;
+        if(check_all(fb))
+            exit(0);
         while(!ready);
 		sendto(server_sock, buffer, strlen(buffer), 0, (struct sockaddr *)&client, client_len);
+        printf("send:%s\n",buffer);
         ready = 0;
 	}
 

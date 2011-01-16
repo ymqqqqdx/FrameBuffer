@@ -2,11 +2,11 @@
 extern unsigned char cursor_16_25[1608];
 unsigned char cursor_save[1608];
 char board[23 * 30] = {0};
-int who = 1;
-//int xx = 123, yy = 234;
+int who = 2;
 mevent_t mevent;
 int ready = 0;
 extern char buffer[256];
+int turn = 0;
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -64,11 +64,11 @@ void draw_cursor(fb_info fb, int x, int y, char * cur)
         }
     }
 }
-int chess_count(int xx, int yy)
+int chess_count(int whom, int xx, int yy)
 {
     int i = (xx + 15 - 420) / 30;
     int j = yy / 30;
-    board[i + j * 23] = who;
+    board[i + j * 23] = whom;
 }
 int check(int xx, int yy)
 {
@@ -80,7 +80,8 @@ int send_to_client(int xx, int yy)
 {
     int i = (xx + 15 - 420) / 30;
     int j = yy / 30;
-    sprintf(buffer, "%d %d %d", who, i, j);
+    sprintf(buffer, "%1d %2d %2d", who, i, j);
+    buffer[strlen(buffer)] = 0;
     ready = 1;
 }
 int check_five(fb_info fb,int x, int y)
@@ -119,13 +120,13 @@ int check_all(fb_info fb)
 {
     int i = 0;
     int j = 0;
-
+    int winner = 0;
     for(i = 0; i < 30; i++)
         for(j = 0; j < 23; j++)
         {
-            if(check_five(fb,i,j))
+            if(winner = check_five(fb,i,j))
             {
-                printf("%d won\n",who);
+                printf("%d won\n",winner);
                 return 1;
             }
         }
@@ -166,17 +167,18 @@ void mouse_test(fb_info *fb)
                 else if(xx >= 300 && yy >= 510 && yy <= 590)
                     who = 1;
             }
-            if(mevent.button == 1 && xx >= 420 && yy <= 710 && xx <= 1320)
+            if(mevent.button == 1 && xx >= 420 && yy <= 710 && xx <= 1320 && turn)
             {
                 if(! check(xx,yy))
                 {
                     draw_piece(*fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
-                    chess_count(xx, yy);
+                    chess_count(who, xx, yy);
                     send_to_client(xx, yy);
                     if(check_all(*fb))
                         exit(0);
-                    printf("%d %d\n",(xx + 15 - 420) / 30, (yy) / 30);
-                    who = (who - 1) ? 1 : 2;
+                    //printf("%d %d\n",(xx + 15 - 420) / 30, (yy) / 30);
+                    turn = 0;
+                    //who = (who - 1) ? 1 : 2;
                 }
             }
             save_cursor(*fb,xx,yy,cursor_save);
