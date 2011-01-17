@@ -8,6 +8,7 @@ extern void mouse_test(fb_info *fb);
 extern int udp_server(fb_info fb);
 extern int udp_client(fb_info fb, char *argv);
 extern int turn;
+extern int who;
 void create_fb(fb_info *fb_v)
 {
     int fd;
@@ -77,12 +78,14 @@ int startup(fb_info fb, char *ip_address)
     if(ch == '1')
     {
         turn = 0;
+        who = 1;
     }
     else if(ch == '2')
     {
         printf("Please input the server IP:");
         scanf("%s",ip_address);
         turn = 1;
+        who = 2;
     }
     return ch - '0';
 }
