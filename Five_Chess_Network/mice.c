@@ -37,7 +37,7 @@ void save_cursor(fb_info fb, int x, int y, unsigned char * cur)
     for(j = 0; j < 25; j++)
         for(i = 0; i < 16; i++)
             for(k = 0; k < 4; k++)
-                cur[16 * j * 4 + i * 4 + k] = fb.mem[((y + j) * 1408 + x + i ) * 4 + k];                
+                cur[16 * j * 4 + i * 4 + k] = fb.mem[((y + j) * FB_WIDTH + x + i ) * 4 + k];                
 }
 void restore_cursor(fb_info fb, int x, int y, unsigned char * cur)
 {
@@ -45,7 +45,7 @@ void restore_cursor(fb_info fb, int x, int y, unsigned char * cur)
     for(j = 0; j < 25; j++)
         for(i = 0; i < 16; i++)
             for(k = 0; k < 4; k++)
-                fb.mem[((y + j) * 1408 + x + i ) * 4 + k] = cur[16 * j * 4 + i * 4 + k];                
+                fb.mem[((y + j) * FB_WIDTH + x + i ) * 4 + k] = cur[16 * j * 4 + i * 4 + k];                
 }
 void draw_cursor(fb_info fb, int x, int y, unsigned char * cur)
 {
@@ -68,19 +68,19 @@ void draw_cursor(fb_info fb, int x, int y, unsigned char * cur)
 }
 void chess_count(int whom, int xx, int yy)
 {
-    int i = (xx + 15 - 420) / 30;
+    int i = (xx + 15 - OFFSET) / 30;
     int j = yy / 30;
     board[i + j * 23] = whom;
 }
 int check(int xx, int yy)
 {
-    int i = (xx + 15 - 420) / 30;
+    int i = (xx + 15 - OFFSET) / 30;
     int j = yy / 30;
     return board[i + j * 23];
 }
 void send_to_client(int xx, int yy)
 {
-    int i = (xx + 15 - 420) / 30;
+    int i = (xx + 15 - OFFSET) / 30;
     int j = yy / 30;
     sprintf(buffer, "%1d %2d %2d", who, i, j);
     buffer[strlen(buffer)] = 0;
@@ -112,7 +112,7 @@ int check_five(fb_info fb,int x, int y)
         }
         if(counter == 5)
         {
-            //draw_piece(fb,nx * 30 + 420,ny * 30 + 15, 13, 0x00ff0000);
+            //draw_piece(fb,nx * 30 + OFFSET,ny * 30 + 15, 13, 0x00ff0000);
             return storage;
         }
     }
@@ -162,14 +162,14 @@ void mouse_test(fb_info *fb)
             if(yy > 721)  yy = 721;
             if(yy < 0)    yy = 0;
             //printf("xx = %d yy = %d\n",xx,yy);
-            if(mevent.button == 1 && xx < 420)
+            if(mevent.button == 1 && xx < OFFSET)
             {
                 if(xx >= 300 && yy >=210 && yy <= 290)
                     who = 2;
                 else if(xx >= 300 && yy >= 510 && yy <= 590)
                     who = 1;
             }
-            if(mevent.button == 1 && xx >= 420 && yy <= 710 && xx <= 1320 && turn)
+            if(mevent.button == 1 && xx >= OFFSET && yy <= 710 && xx <= 1320 && turn)
             {
                 if(! check(xx,yy))
                 {
@@ -178,7 +178,7 @@ void mouse_test(fb_info *fb)
                     send_to_client(xx, yy);
                     if(check_all(*fb))
                         exit(0);
-                    //printf("%d %d\n",(xx + 15 - 420) / 30, (yy) / 30);
+                    //printf("%d %d\n",(xx + 15 - OFFSET) / 30, (yy) / 30);
                     turn = 0;
                     //who = (who - 1) ? 1 : 2;
                 }

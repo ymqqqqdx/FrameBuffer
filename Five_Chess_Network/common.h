@@ -34,6 +34,8 @@ typedef struct{
     int z;
     int button;
 }mevent_t;
+#define FB_WIDTH 1408
+#define OFFSET 420
 /**//***************basic_shape.c********************/
 /*extern void drawretangle(fb_info fb,Dot start,Dot end,u32_t color);*/
 /*extern int fb_line(fb_info fb,int x1,int y1,int x2,int y2,u32_t color);*/

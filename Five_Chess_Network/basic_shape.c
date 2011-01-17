@@ -2,7 +2,7 @@
 void draw_pix(fb_info fb,int x,int y, u32_t color)
 {
     u32_t *p;
-    p = (u32_t *)(fb.mem + 1408 * y * 4 + x * 4 );
+    p = (u32_t *)(fb.mem + FB_WIDTH * y * 4 + x * 4 );
     *p = color;
 }
 void swap(int *a,int *b)
