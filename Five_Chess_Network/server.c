@@ -78,7 +78,7 @@ int udp_server(fb_info fb)
 		//if(buffer[0] == '.') break;
         printf("receive:%s\n",buffer);
         sscanf(buffer, "%1d %2d %2d", &whom, &x, &y);
-        draw_piece(fb, x * 30 + 420, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
+        draw_piece(fb, x * 30 + OFFSET, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
         board[x + y * 23] = whom;
         turn = 1;
         if(check_all(fb))

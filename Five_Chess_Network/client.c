@@ -58,7 +58,7 @@ int udp_client(fb_info fb, char *argv)
 		n = recvfrom(client_sock, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&server, &server_len);
         printf("receive:%s\n",buffer);
         sscanf(buffer, "%1d %2d %2d", &whom, &x, &y);
-        draw_piece(fb, x * 30 + 330, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
+        draw_piece(fb, x * 30 + OFFSET, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
         board[x + y * 23] = whom;
         if(check_all(fb))
            exit(0);
