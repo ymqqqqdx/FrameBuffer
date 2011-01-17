@@ -73,8 +73,10 @@ int startup(fb_info fb, char *ip_address)
     printf("1.Play as server.\n");
     printf("2.Play as client.\n");
     printf("********************\n");
-    printf("Please Enter your choice:");
-    ch = getchar();getchar();
+st: printf("Please Enter your choice:");
+    ch = getchar();
+    if(ch == '\n') goto st;
+    else getchar();
     if(ch == '1')
     {
         turn = 0;

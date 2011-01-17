@@ -9,6 +9,7 @@ extern char buffer[256];
 int turn = 0;
 extern void draw_pix(fb_info fb,int x,int y, u32_t color);
 extern void draw_piece(fb_info fb,int x,int y,int r,u32_t color);
+int mx = 110, my = 220;
 int mouse_open(const char *mdev)
 {
     if(mdev == NULL)
@@ -137,7 +138,6 @@ int check_all(fb_info fb)
 void mouse_test(fb_info *fb)
 {
     int fd;
-    int xx = 110, yy = 220;
     if((fd = mouse_open("/dev/input/mice")) < 0)
     {
         perror("mouse_open");
@@ -149,40 +149,40 @@ void mouse_test(fb_info *fb)
         perror("mouse_write");
         fprintf(stderr, "Error write to mice device\n");
     }
-    save_cursor(*fb,xx,yy,cursor_save);
+    save_cursor(*fb,mx,my,cursor_save);
     while(1)
     {
         if(mouse_parse(fd, &mevent) == 0 && (mevent.x || mevent.y || mevent.z || mevent.button))
         {
-            restore_cursor(*fb,xx,yy,cursor_save);
-            xx += mevent.x;
-            yy += mevent.y;
-            if(xx > 1366) xx = 1366;
-            if(xx < 0)    xx = 0;
-            if(yy > 721)  yy = 721;
-            if(yy < 0)    yy = 0;
+            restore_cursor(*fb,mx,my,cursor_save);
+            mx += mevent.x;
+            my += mevent.y;
+            if(mx > 1366) mx = 1366;
+            if(mx < 0)    mx = 0;
+            if(my > 721)  my = 721;
+            if(my < 0)    my = 0;
             //printf("xx = %d yy = %d\n",xx,yy);
-            if(mevent.button == 1 && xx < OFFSET)
+            if(mevent.button == 1 && mx < OFFSET)
             {
-                if(xx >= 300 && yy >=210 && yy <= 290)
+                if(mx >= 300 && my >=210 && my <= 290)
                     who = 2;
-                else if(xx >= 300 && yy >= 510 && yy <= 590)
+                else if(mx >= 300 && my >= 510 && my <= 590)
                     who = 1;
             }
-            if(mevent.button == 1 && xx >= OFFSET && yy <= 710 && xx <= 1320 && turn)
+            if(mevent.button == 1 && mx >= OFFSET && my <= 710 && mx <= 1320 && turn)
             {
-                if(! check(xx,yy))
+                if(! check(mx,my))
                 {
-                    draw_piece(*fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
-                    chess_count(who, xx, yy);
-                    send_to_client(xx, yy);
+                    draw_piece(*fb,(mx + 15)/30 * 30,my/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
+                    chess_count(who, mx, my);
+                    send_to_client(mx, my);
                     //printf("%d %d\n",(xx + 15 - OFFSET) / 30, (yy) / 30);
                     turn = 0;
                     //who = (who - 1) ? 1 : 2;
                 }
             }
-            save_cursor(*fb,xx,yy,cursor_save);
-            draw_cursor(*fb,xx,yy,cursor_16_25);
+            save_cursor(*fb,mx,my,cursor_save);
+            draw_cursor(*fb,mx,my,cursor_16_25);
         }
         usleep(1000);
     }

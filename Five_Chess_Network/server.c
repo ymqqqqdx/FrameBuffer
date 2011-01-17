@@ -21,6 +21,12 @@ extern char board[23 * 30];
 extern int turn;
 extern void draw_piece(fb_info fb,int x,int y,int r,u32_t color);
 extern int check_all(fb_info fb);
+extern int mx, my;
+extern unsigned char cursor_16_25[1608];
+extern unsigned char cursor_save[1608];
+extern void restore_cursor(fb_info fb, int x, int y, unsigned char * cur);
+extern void save_cursor(fb_info fb, int x, int y, unsigned char * cur);
+extern void draw_cursor(fb_info fb, int x, int y, unsigned char * cur);
 int udp_server(fb_info fb)
 {
 	int len;
@@ -78,7 +84,10 @@ int udp_server(fb_info fb)
 		//if(buffer[0] == '.') break;
         printf("receive:%s\n",buffer);
         sscanf(buffer, "%1d %2d %2d", &whom, &x, &y);
+        restore_cursor(fb,mx,my,cursor_save);
         draw_piece(fb, x * 30 + OFFSET, y * 30 + 15, 13,(whom - 1) ? 0x00000000 : 0xffffffff);
+        save_cursor(fb,mx,my,cursor_save);
+        draw_cursor(fb,mx,my,cursor_16_25);
         board[x + y * 23] = whom;
         turn = 1;
         if(check_all(fb))
