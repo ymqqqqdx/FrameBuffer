@@ -61,6 +61,8 @@ int udp_server(fb_info fb)
 	{
 		client_len = sizeof(client);
 		len = recvfrom(server_sock, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&client, &client_len);
+        if(check_all(fb))
+            exit(0);
 		//if (len < 0)
 		//{
 			//close(server_sock);

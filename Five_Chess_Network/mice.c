@@ -176,8 +176,6 @@ void mouse_test(fb_info *fb)
                     draw_piece(*fb,(xx + 15)/30 * 30,yy/30 * 30 + 15,13,(who - 1) ? 0x00000000 : 0xffffffff);
                     chess_count(who, xx, yy);
                     send_to_client(xx, yy);
-                    if(check_all(*fb))
-                        exit(0);
                     //printf("%d %d\n",(xx + 15 - OFFSET) / 30, (yy) / 30);
                     turn = 0;
                     //who = (who - 1) ? 1 : 2;
