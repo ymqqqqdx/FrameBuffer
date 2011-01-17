@@ -61,8 +61,6 @@ int udp_server(fb_info fb)
 	{
 		client_len = sizeof(client);
 		len = recvfrom(server_sock, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&client, &client_len);
-        if(check_all(fb))
-            exit(0);
 		//if (len < 0)
 		//{
 			//close(server_sock);
@@ -87,6 +85,8 @@ int udp_server(fb_info fb)
             exit(0);
         while(!ready);
 		sendto(server_sock, buffer, strlen(buffer), 0, (struct sockaddr *)&client, client_len);
+        if(check_all(fb))
+            exit(0);
         printf("send:%s\n",buffer);
         ready = 0;
 	}
