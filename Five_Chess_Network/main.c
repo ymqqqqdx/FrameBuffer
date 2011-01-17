@@ -100,12 +100,12 @@ int main(int argc, const char *argv[])
     create_fb(&fb_v);
     system("clear");
     mode = startup(fb_v, ip_address);
-    draw_pic(fb_v,400,0,940,720,gImage_chessboard);
-    draw_pic(fb_v,300,200,100,100,gImage_chessboard);
-    draw_pic(fb_v,300,500,100,100,gImage_chessboard);
-    draw_piece(fb_v,350,250,40,0x00000000);
-    draw_piece(fb_v,350,550,40,0xffffffff);
-    print_board(fb_v,23,30,30,420,15,0x00000000);
+    draw_pic(fb_v,OFFSET - 20,0,940,720,gImage_chessboard);
+    draw_pic(fb_v,OFFSET - 120,200,100,100,gImage_chessboard);
+    draw_pic(fb_v,OFFSET - 120,500,100,100,gImage_chessboard);
+    draw_piece(fb_v,OFFSET - 70,250,40,0x00000000);
+    draw_piece(fb_v,OFFSET - 70,550,40,0xffffffff);
+    print_board(fb_v,23,30,30,OFFSET,15,0x00000000);
     temp = &fb_v;
     if((ret = pthread_create(&id, NULL, (void *) mouse_test,(void *)temp)) != 0)
     {
